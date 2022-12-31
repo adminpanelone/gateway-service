@@ -18,14 +18,27 @@ const settingsCreateService = {
       {
         path: "/",
         whitelist: [
-          "users.signin",
-          "users.signup",
+          "users.login",
+          "users.register",
         ]
       },
+      // {
+      //   path: "/",
+      //   authorization: true,
+      //   whitelist: [
+      //     "users.getAll",
+      //   ]
+      // },
       {
-      authorization: true,
-      path: "/api",
-    }]
+        authorization: true,
+        path: "/api",
+        whitelist: [
+          "users.getAll",
+        ],
+        aliases: {
+          "GET /users": "users.getAll"
+        },
+      }]
   }
 };
 
