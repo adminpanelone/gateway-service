@@ -22,13 +22,6 @@ const settingsCreateService = {
           "users.register",
         ]
       },
-      // {
-      //   path: "/",
-      //   authorization: true,
-      //   whitelist: [
-      //     "users.getAll",
-      //   ]
-      // },
       {
         authorization: true,
         path: "/api",
