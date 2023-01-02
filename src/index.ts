@@ -14,13 +14,18 @@ const settingsCreateService = {
   mixins: [ApiService],
   name: 'gateway-api',
   settings: {
+    port: 4000,
     routes: [
       {
         path: "/",
         whitelist: [
           "users.login",
           "users.register",
-        ]
+        ],
+        aliases: {
+          "POST /api/register": "users.register",
+          "POST /api/login": "users.login"
+        },
       },
       {
         authorization: true,
