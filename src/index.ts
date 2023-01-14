@@ -21,10 +21,12 @@ const settingsCreateService = {
         whitelist: [
           "users.login",
           "users.register",
+          "users.hello",
         ],
         aliases: {
+          "POST /api/login": "users.login",
           "POST /api/register": "users.register",
-          "POST /api/login": "users.login"
+          "GET /api/hello": "users.hello",
         },
       },
       {
@@ -36,7 +38,8 @@ const settingsCreateService = {
         aliases: {
           "GET /users": "users.getAll"
         },
-      }]
+      }
+    ]
   }
 };
 
@@ -48,8 +51,11 @@ class GatewayApiService extends MoleculerService {
     if (auth && auth.startsWith("Bearer")) {
       let token = auth.slice(7);
       try {
-        const res = await broker.call('jwtauth.auth', {token: token}, {});
+        const res: any = await broker.call('jwtauth.auth', {token: token}, {})
         ctx.meta.user = res;
+        ctx.meta.cookies = {
+          'Set-Cookie': `${res.refreshToken};MaxAge=${res.expiresIn};HttpOnly`
+        };
         return Promise.resolve(ctx);
       } catch (err) {
         return Promise.reject(new E.UnAuthorizedError(E.ERR_INVALID_TOKEN))
@@ -58,8 +64,18 @@ class GatewayApiService extends MoleculerService {
       // No token
       return Promise.reject(new E.UnAuthorizedError(E.ERR_NO_TOKEN));
     }
-
   }
+
+  // @Action({
+  //   rest: {
+  //     method: "GET",
+  //     path: "/hello"
+  //   }
+  // })
+  // hello(ctx: any) {
+  //   console.log(ctx)
+  //   return "Hello Moleculer";
+  // }
 
   started() { // Reserved for moleculer, fired when started
     console.log("Started!")
